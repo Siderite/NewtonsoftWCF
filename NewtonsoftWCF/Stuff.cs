@@ -49,7 +49,6 @@ namespace NewtonsoftWCF
             set
             {
                 _jtoken = value;
-                cleanWCFTypeFrom(_jtoken);
                 _configuration = null;
             }
         }
