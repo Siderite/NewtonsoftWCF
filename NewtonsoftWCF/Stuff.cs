@@ -3,7 +3,9 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Web;
 
@@ -77,14 +79,20 @@ namespace NewtonsoftWCF
         }
     }
 
-    public class ThingContractResolver : DefaultContractResolver
+    public class JsonWCFContractResolver : DefaultContractResolver
     {
         protected override JsonProperty CreateProperty(System.Reflection.MemberInfo member,
-               Newtonsoft.Json.MemberSerialization memberSerialization)
+           Newtonsoft.Json.MemberSerialization memberSerialization)
         {
             var prop = base.CreateProperty(member, memberSerialization);
-            if (member.Name == "Configuration") prop.Ignored = false;
+            var hasIgnoreDataMember = member.IsDefined(typeof(IgnoreDataMemberAttribute), false);
+            var hasJsonIgnore = member.IsDefined(typeof(JsonIgnoreAttribute), false);
+            if (hasIgnoreDataMember && !hasJsonIgnore)
+            {
+                prop.Ignored = false;
+            }
             return prop;
         }
     }
+
 }

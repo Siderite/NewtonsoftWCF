@@ -25,24 +25,23 @@ namespace NewtonsoftWCF
 		}
 	]
 }";
+        static Service1()
+        {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                ContractResolver=new JsonWCFContractResolver()
+            };
+        }
 
         public Stuff GetData()
         {
-            var resolver = new ThingContractResolver();
-            var result= JsonConvert.DeserializeObject<Stuff>(cJson, new JsonSerializerSettings
-            {
-                ContractResolver = resolver
-            });
+            var result= JsonConvert.DeserializeObject<Stuff>(cJson);
             return result;
         }
 
         public void SetData(Stuff stuff)
         {
-            var resolver = new ThingContractResolver();
-            cJson = JsonConvert.SerializeObject(stuff, new JsonSerializerSettings
-            {
-                ContractResolver = resolver
-            });
+            cJson = JsonConvert.SerializeObject(stuff);
         }
     }
 }
